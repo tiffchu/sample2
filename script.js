@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var myChart = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: ['Organic Search', 'Direct Traffic', 'Referral', 'Social Media'],
+            labels: ['Ping Pong', 'Math', 'Dog', 'Money'],
             datasets: [{
                 label: 'Website Traffic',
                 data: [300, 200, 150, 100],
@@ -57,6 +57,46 @@ document.addEventListener("DOMContentLoaded", function() {
             animation: {
                 animateScale: true,
                 animateRotate: true
+            }
+        }
+    });
+});
+document.addEventListener("DOMContentLoaded", function() {
+    var ctx = document.getElementById('visitsChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+            datasets: [{
+                label: 'Website Visits',
+                data: [150, 220, 320, 280, 400, 360, 500],
+                fill: false,
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            title: {
+                display: true,
+                text: 'Line Trend'
+            },
+            scales: {
+                x: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'Month'
+                    }
+                },
+                y: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'Visits'
+                    },
+                    beginAtZero: true
+                }
             }
         }
     });
