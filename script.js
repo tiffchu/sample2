@@ -114,3 +114,115 @@ function getRandomColor() {
     }
     return color;
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const gridSize = 20;
+    const tileSize = 20;
+    const tileCount = gridSize;
+    let snake = [{ x: 10, y: 10 }];
+    let apple = { x: 15, y: 15 };
+    let dx = 0;
+    let dy = 0;
+    let score = 0;
+    let gameLoop;
+
+    function drawSnakePart(snakePart) {
+        ctx.fillStyle = "#008000";
+        ctx.fillRect(snakePart.x * tileSize, snakePart.y * tileSize, tileSize, tileSize);
+    }
+
+    function drawApple() {
+        ctx.fillStyle = "#FF0000";
+        ctx.fillRect(apple.x * tileSize, apple.y * tileSize, tileSize, tileSize);
+    }
+
+    function drawSnake() {
+        snake.forEach(drawSnakePart);
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawApple();
+        drawSnake();
+    }
+
+    function moveSnake() {
+        const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+        snake.unshift(head);
+        if (head.x === apple.x && head.y === apple.y) {
+            score++;
+            generateNewApple();
+        } else {
+            snake.pop();
+        }
+    }
+
+    function generateNewApple() {
+        apple = {
+            x: Math.floor(Math.random() * tileCount),
+            y: Math.floor(Math.random() * tileCount)
+        };
+        if (snake.some(part => part.x === apple.x && part.y === apple.y)) {
+            generateNewApple();
+        }
+    }
+
+    function isGameOver() {
+        return (
+            snake[0].x < 0 ||
+            snake[0].x >= tileCount ||
+            snake[0].y < 0 ||
+            snake[0].y >= tileCount ||
+            snake.slice(1).some(part => part.x === snake[0].x && part.y === snake[0].y)
+        );
+    }
+
+    function main() {
+        if (isGameOver()) {
+            clearInterval(gameLoop);
+            alert("Game Over! Your score: " + score);
+            return;
+        }
+
+        moveSnake();
+        draw();
+    }
+
+    function startGame() {
+        snake = [{ x: 10, y: 10 }];
+        score = 0;
+        dx = 0;
+        dy = 0;
+        generateNewApple();
+        gameLoop = setInterval(main, 100);
+    }
+
+    document.addEventListener("keydown", function onKeyDown(event) {
+        const key = event.key;
+        const goingUp = dy === -1;
+        const goingDown = dy === 1;
+        const goingRight = dx === 1;
+        const goingLeft = dx === -1;
+
+        if (key === "ArrowUp" && !goingDown) {
+            dx = 0;
+            dy = -1;
+        } else if (key === "ArrowDown" && !goingUp) {
+            dx = 0;
+            dy = 1;
+        } else if (key === "ArrowLeft" && !goingRight) {
+            dx = -1;
+            dy = 0;
+        } else if (key === "ArrowRight" && !goingLeft) {
+            dx = 1;
+            dy = 0;
+        }
+    });
+
+    document.getElementById("restartButton").addEventListener("click", startGame);
+
+    startGame();
+});
